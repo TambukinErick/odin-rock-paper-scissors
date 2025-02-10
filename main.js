@@ -29,26 +29,58 @@ function getHumanChoice() {
   return result;
 }
 
-function determineWinner(humanChoice, computerChoice) {
+function determineRoundWinner(humanChoice, computerChoice) {
   if (humanChoice === computerChoice) {
-    return `Its a tie, you both played ${humanChoice}`;
-  }
+    return "tie"  }
   if ((humanChoice == "rock" && computerChoice == "paper") ||
       (humanChoice == "paper" && computerChoice == "scissors") ||
       (humanChoice == "scissors" && computerChoice == "rock")
   ) {
-    return `You lose! ${computerChoice} beats ${humanChoice}`;
+    return "lose"  
   }
-    return `You win! ${humanChoice} beats ${computerChoice}`;
+    return "win"
+}
+
+function generateRoundResultMessage(result, humanChoice, computerChoice) {
+  if (result == "tie") return `Its a tie, you both played ${humanChoice}`;
+  if (result == "lose") return `You lose! ${computerChoice} beats ${humanChoice}`;
+  if (result == "win") return `You win! ${humanChoice} beats ${computerChoice}`;
+
+}
+
+function updateScores(result) {
+  if (result == "win") {
+    humanScore += 1;
+  } else if (result == "lose") {
+    computerScore += 1;
+  }
 }
 
 function playRound(humanChoice, computerChoice) {
-  const result = determineWinner(humanChoice, computerChoice);
-  console.log(result);
+  const result = determineRoundWinner(humanChoice, computerChoice);
+  updateScores(result);
+
+  return generateRoundResultMessage(result, humanChoice, computerChoice);
 }
 
-const humanSelection = getHumanChoice();
-const computerSelection = getComputerChoice();
-console.log(computerSelection);
+function getFinalWinner() {
+  if (humanScore > computerScore) {
+    return `You Win!\nFinal Scores\nHuman:${humanScore} Computer:${computerScore} `;
+  } else if (humanScore < computerScore) {
+    return `You Lose! Better Luck Next Time\nFinal Scores\nHuman:${humanScore} Computer:${computerScore}`;
+  } else {
+    return `Its A Tie\nFinal Scores\nHuman:${humanScore} Computer:${computerScore}` ;
+  }
+}
 
-playRound(humanSelection, computerSelection);
+function startGame() {
+  for (let i = 0; i < 5; i++) {
+    const humanSelection = getHumanChoice();
+    const computerSelection = getComputerChoice();
+    console.log(`round #${i+1}`)
+    console.log(playRound(humanSelection, computerSelection));
+  }
+}
+
+startGame();
+console.log(getFinalWinner());
